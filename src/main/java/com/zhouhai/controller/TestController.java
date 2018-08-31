@@ -23,4 +23,10 @@ public class TestController {
 		resp.setContentType("utf-8");
 		resp.getWriter().write(testService.getInfo(name, age));
 	}
+	//http://localhost/SimpleMVC/test/getInfo2.do?name=qas123123de&age=77&sex=12&ssss=2
+	@RequestMapping("/getInfo2.do")
+	public void getInfo2(HttpServletRequest req,HttpServletResponse resp,@RequestParam("name") String name, int age) throws IOException {
+		resp.setContentType("utf-8");
+		resp.getWriter().write(testService.getInfo2(name, age));
+	}
 }

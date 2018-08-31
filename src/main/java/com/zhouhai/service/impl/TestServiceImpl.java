@@ -15,4 +15,9 @@ public class TestServiceImpl implements TestService{
 		return "name:"+name+" -- age:"+age +" --- sex:" + sex;
 	}
 
+	@Override
+	public String getInfo2(String name, int age) {
+		return "name:"+name+" -- age:"+age;
+	}
+
 }

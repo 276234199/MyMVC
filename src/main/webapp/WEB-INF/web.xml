@@ -7,7 +7,7 @@
   
   	<servlet>
 		<servlet-name>DispatcherServlet</servlet-name>
-		<servlet-class>com.zhouhai.servlet.DispatcherServlet</servlet-class>
+		<servlet-class>com.zhouhai.servlet.DispatcherServletV2</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>

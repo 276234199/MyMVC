@@ -17,7 +17,7 @@ public class TestController {
 
 	@Autowired("testService")
 	TestService testService;
-	//http://localhost/SimpleMVC/test/getInfo.do?name=qas123123de&age=asdasdasd&sex=12&ssss=2
+	//http://localhost/SimpleMVC/test/getInfo.do?name=qas123123de&age=77&sex=12&ssss=2
 	@RequestMapping("/getInfo.do")
 	public void getInfo(HttpServletRequest req,HttpServletResponse resp,@RequestParam("name") String name, String age) throws IOException {
 		resp.setContentType("utf-8");

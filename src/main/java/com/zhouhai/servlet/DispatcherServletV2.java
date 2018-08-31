@@ -22,12 +22,16 @@ import com.zhouhai.anno.Controller;
 import com.zhouhai.anno.RequestMapping;
 import com.zhouhai.anno.RequestParam;
 import com.zhouhai.anno.Service;
+import com.zhouhai.argument.ArgumentResolver;
+import com.zhouhai.handle.HandleToolsService;
+
 /**
- * 基础班本的DispatcherServlet，简单的处理参数 全是String 
+ * 相比DispatcherServlet，  DispatcherServletV2优化了参数处理  doPost方法中体现
+ * 使用了策略模式
  * @author zhouhai
  *
  */
-public class DispatcherServlet extends HttpServlet {
+public class DispatcherServletV2 extends HttpServlet {
 
 	private static final long serialVersionUID = -38802039993674064L;
 
@@ -57,7 +61,7 @@ public class DispatcherServlet extends HttpServlet {
 	}
 
 	private void scanPackage(String basePath) {
-		File file = new File(DispatcherServlet.class.getResource(basePath).getFile()); //
+		File file = new File(DispatcherServletV2.class.getResource(basePath).getFile()); //
 		if (file.isDirectory()) {
 			for (String path : file.list()) {
 				scanPackage(basePath + "/" + path);
@@ -205,45 +209,15 @@ public class DispatcherServlet extends HttpServlet {
 		if(method == null) {
 			resp.getWriter().write("bad request");
 		}
-		Object controller = instanceMap.get(path.split("/")[1]);
-		try {
-			
-			Parameter[] paras = method.getParameters();
-			
-			//用于保存invoke所需参数
-			Object[] methodParams = new Object[paras.length];
 		
-			for(int i = 0 ;i<paras.length ; i++) {
-				Parameter para = paras[i];
-				
-				if(para.getType().equals(HttpServletRequest.class)) {
-					methodParams[i] = req;
-					continue;
-				}
-				
-				if(para.getType().equals(HttpServletResponse.class)) {
-					methodParams[i] = resp;
-					continue;
-				}
-				
-//				RequestParam reqParaAnno = para.getAnnotation(RequestParam.class);
-//				if(reqParaAnno!=null) {
-//					System.out.println("----------------"+req.getParameter(reqParaAnno.value()));
-//				}else {
-//					System.out.println("----------------!!!!!!!!!!!!"+req.getParameter(para.getName()));
-//				}
-				
-				RequestParam[] paramAnnos = para.getDeclaredAnnotationsByType(RequestParam.class);
-				if(paramAnnos.length>0) {
-					RequestParam requestParamAnno = paramAnnos[0];
-					String reqRaraName = requestParamAnno.value();
-					methodParams[i] = req.getParameter(reqRaraName);
-				}else {
-					methodParams[i] = req.getParameter(para.getName());
-				}
-			}
-			
-			method.invoke(controller, methodParams);
+		//拿到controller
+		Object controller = instanceMap.get(path.split("/")[1]);
+		HandleToolsService handleTool = (HandleToolsService) instanceMap.get("handleTool");
+		//初始化参数数组
+		Object[] args = handleTool.handle(req, resp, method, instanceMap);
+		
+		try {
+			method.invoke(controller, args);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -251,6 +225,7 @@ public class DispatcherServlet extends HttpServlet {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 }

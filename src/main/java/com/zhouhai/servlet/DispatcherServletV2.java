@@ -61,7 +61,7 @@ public class DispatcherServletV2 extends HttpServlet {
 	}
 
 	private void scanPackage(String basePath) {
-		File file = new File(DispatcherServletV2.class.getResource(basePath).getFile()); //
+		File file = new File(DispatcherServletV2.class.getClassLoader().getResource(basePath).getFile()); //
 		if (file.isDirectory()) {
 			for (String path : file.list()) {
 				scanPackage(basePath + "/" + path);

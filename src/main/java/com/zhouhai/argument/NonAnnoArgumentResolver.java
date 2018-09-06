@@ -35,7 +35,8 @@ public class NonAnnoArgumentResolver implements ArgumentResolver {
 	public Object resolve(HttpServletRequest req, HttpServletResponse resp, Class<?> type, int index, Method method) {
 		Parameter[]  paras = method.getParameters();
 		Parameter para = paras[index];
-		return req.getParameter(para.getName());
+		return TypeHandler.typeConvert(req.getParameter(para.getName()), para.getType());
+//		return req.getParameter(para.getName());
 	}
 
 }

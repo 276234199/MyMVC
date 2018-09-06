@@ -34,7 +34,8 @@ public class ParamArgumentResolver implements ArgumentResolver {
 		if(para.isAnnotationPresent(RequestParam.class)) {
 			RequestParam reqParaAnno = para.getAnnotation(RequestParam.class);
 			String value = reqParaAnno.value();
-			return req.getParameter(value);
+//			return req.getParameter(value);
+			return TypeHandler.typeConvert(req.getParameter(value), para.getType());
 		}
 		return null;
 	}
